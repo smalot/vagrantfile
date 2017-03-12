@@ -1,0 +1,22 @@
+{
+  "name": "smalot/vagrantfile",
+  "description": "Vagrant file generator.",
+  "keywords": ["vagrant", "vagrantfile", "generator"],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastien Malot",
+      "email": "smalot@actualys.com"
+    }
+  ],
+  "require": {
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Smalot\\Vagrant\\Generator\\": "src/"
+    }
+  }
+}
