@@ -2,6 +2,7 @@
 
 namespace Smalot\Vagrant\Generator\Machine\Network;
 
+use Smalot\Vagrant\Generator\Component\Comment;
 use Smalot\Vagrant\Generator\Component\ValueOption;
 
 /**
@@ -100,5 +101,17 @@ class PublicNetwork extends ValueOption implements NetworkInterface
         $this->options['auto_config'] = boolval($autoConfig);
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function dump($level = 0)
+    {
+        $comment = new Comment('Create a public network, which generally matched to bridged network. Bridged networks make the machine appear as another physical device on your network.');
+        $content = PHP_EOL.$comment->dump($level);
+        $content .= parent::dump($level);
+
+        return $content;
     }
 }

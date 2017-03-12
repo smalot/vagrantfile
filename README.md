@@ -11,10 +11,10 @@ Helper to easily create `Vagrantfile`.
 ````php
 include 'vendor/autoload.php';
 
-use Smalot\Vagrant\Generator\Vagrantfile;
 use Smalot\Vagrant\Generator\Machine\Network\ForwardedPort;
 use Smalot\Vagrant\Generator\Machine\Network\PrivateNetwork;
 use Smalot\Vagrant\Generator\Machine\Network\PublicNetwork;
+use Smalot\Vagrant\Generator\Vagrantfile;
 
 $vagrantfile = new Vagrantfile();
 
@@ -24,10 +24,18 @@ $vagrantfile->addChildren($forwardedPort);
 $privateNetwork = new PrivateNetwork(['dhcp' => true]);
 $vagrantfile->addNetworkEntry($privateNetwork);
 
-$publicNetwork = new PublicNetwork(['bridge' => ['en1: Wi-Fi (AirPort)', 'en6: Broadcom NetXtreme Gigabit Ethernet Controller']]);
+$publicNetwork = new PublicNetwork(
+  [
+    'bridge' => [
+      'en1: Wi-Fi (AirPort)',
+      'en6: Broadcom NetXtreme Gigabit Ethernet Controller',
+    ],
+  ]
+);
 $vagrantfile->addNetworkEntry($publicNetwork);
 
 echo $vagrantfile->dump();
+
 ````
 
 This sample code will generate this:

@@ -14,6 +14,11 @@ class Bloc implements BaseInterface
     protected $name;
 
     /**
+     * @var Comment
+     */
+    protected $comment;
+
+    /**
      * @var BaseInterface[]
      */
     protected $childs;
@@ -21,11 +26,13 @@ class Bloc implements BaseInterface
     /**
      * Bloc constructor.
      * @param string $name
+     * @param Comment $comment
      * @param BaseInterface[] $childs
      */
-    public function __construct($name, $childs = [])
+    public function __construct($name, Comment $comment = null, $childs = [])
     {
         $this->name = $name;
+        $this->comment = $comment;
         $this->childs = $childs;
     }
 
@@ -44,6 +51,25 @@ class Bloc implements BaseInterface
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Comment
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return Bloc
+     */
+    public function setComment(Comment $comment)
+    {
+        $this->comment = $comment;
 
         return $this;
     }
@@ -69,11 +95,16 @@ class Bloc implements BaseInterface
 
     /**
      * @param BaseInterface $children
+     * @param string $name
      * @return Bloc
      */
-    public function addChildren(BaseInterface $children)
+    public function addChildren(BaseInterface $children, $name = null)
     {
-        $this->childs[] = $children;
+        if (!is_null($name)) {
+            $this->childs[$name] = $children;
+        } else {
+            $this->childs[] = $children;
+        }
 
         return $this;
     }
@@ -91,7 +122,13 @@ class Bloc implements BaseInterface
      */
     public function dump($level = 0)
     {
-        $content = str_repeat(' ', 4 * $level);
+        $content = '';
+
+        if (!is_null($this->comment)) {
+            $content .= $this->comment->dump($level);
+        }
+
+        $content .= str_repeat(' ', 4 * $level);
         $content .= $this->getBlocName().PHP_EOL;
 
         foreach ($this->childs as $child) {

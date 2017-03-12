@@ -18,10 +18,11 @@ class ValueOption extends Value
      * @param string $name
      * @param string $value
      * @param array $options
+     * @param string $comment
      */
-    public function __construct($name, $value = null, $options = [])
+    public function __construct($name, $value = null, $options = [], $comment)
     {
-        parent::__construct($name, $value);
+        parent::__construct($name, $value, $comment);
 
         $this->options = $options;
     }
@@ -50,7 +51,19 @@ class ValueOption extends Value
      */
     public function dump($level = 0)
     {
-        $content = parent::dump($level);
+        $content = '';
+
+        if ($this->comment) {
+            $comment = new Comment($this->comment);
+            $content .= PHP_EOL.$comment->dump($level);
+        }
+
+        $content .= str_repeat(' ', $level * 4);
+        $content .= $this->name;
+
+        if (!is_null($this->value)) {
+            $content .= ' '.$this->prepareValue($this->value);
+        }
 
         foreach ($this->options as $name => $value) {
             if (is_null($value)) {

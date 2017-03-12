@@ -2,6 +2,7 @@
 
 namespace Smalot\Vagrant\Generator\Machine\Network;
 
+use Smalot\Vagrant\Generator\Component\Comment;
 use Smalot\Vagrant\Generator\Component\ValueOption;
 
 /**
@@ -164,5 +165,17 @@ class ForwardedPort extends ValueOption implements NetworkInterface
         $this->options['id'] = $id;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function dump($level = 0)
+    {
+        $comment = new Comment('Create a forwarded port mapping which allows access to a specific port within the machine from a port on the host machine.');
+        $content = PHP_EOL.$comment->dump($level);
+        $content .= parent::dump($level);
+
+        return $content;
     }
 }

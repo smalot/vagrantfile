@@ -19,14 +19,21 @@ class Value implements BaseInterface
     protected $value;
 
     /**
+     * @var Comment
+     */
+    protected $comment;
+
+    /**
      * Value constructor.
      * @param string $name
      * @param string $value
+     * @param Comment $comment
      */
-    public function __construct($name, $value = null)
+    public function __construct($name, $value = null, Comment $comment = null)
     {
         $this->name = $name;
         $this->value = $value;
+        $this->comment = $comment;
     }
 
     /**
@@ -68,15 +75,39 @@ class Value implements BaseInterface
     }
 
     /**
+     * @return Comment
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return Value
+     */
+    public function setComment(Comment $comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function dump($level = 0)
     {
-        $content = str_repeat(' ', $level * 4);
-        $content .= $this->name.' ';
+        $content = '';
+
+        if (!is_null($this->comment)) {
+            $content .= PHP_EOL.$this->comment->dump($level);
+        }
+
+        $content .= str_repeat(' ', $level * 4).$this->name;
 
         if (!is_null($this->value)) {
-            $content .= $this->prepareValue($this->value);
+            $content .= ' = '.$this->prepareValue($this->value);
         }
 
         return $content;
@@ -95,7 +126,7 @@ class Value implements BaseInterface
                 $values[] = $this->prepareValue($subvalue);
             }
 
-            return '[' . implode(', ', $values) . ']';
+            return '['.implode(', ', $values).']';
         } elseif (is_bool($value)) {
             return ($value ? 'true' : 'false');
         } elseif (is_numeric($value)) {

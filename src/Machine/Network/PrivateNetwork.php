@@ -2,6 +2,7 @@
 
 namespace Smalot\Vagrant\Generator\Machine\Network;
 
+use Smalot\Vagrant\Generator\Component\Comment;
 use Smalot\Vagrant\Generator\Component\ValueOption;
 
 /**
@@ -100,5 +101,17 @@ class PrivateNetwork extends ValueOption implements NetworkInterface
         $this->options['auto_config'] = boolval($autoConfig);
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function dump($level = 0)
+    {
+        $comment = new Comment('Create a private network, which allows host-only access to the machine using a specific IP.');
+        $content = PHP_EOL.$comment->dump($level);
+        $content .= parent::dump($level);
+
+        return $content;
     }
 }
