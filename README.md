@@ -9,8 +9,6 @@ Helper to easily create `Vagrantfile`.
 # Implements
 
 ````php
-<?php
-
 include 'vendor/autoload.php';
 
 use Smalot\Vagrant\Generator\Vagrantfile;
@@ -30,4 +28,14 @@ $publicNetwork = new PublicNetwork(['bridge' => ['en1: Wi-Fi (AirPort)', 'en6: B
 $vagrantfile->addNetworkEntry($publicNetwork);
 
 echo $vagrantfile->dump();
+````
+
+This sample code will generate this:
+
+````
+Vagrant.configure("2") do |config|
+    config.vm.network "ForwardedPorted_port", guest: 80, host: 8081
+    config.vm.network "private_network", dhcp: true
+    config.vm.network "public_network", bridge: ["en1: Wi-Fi (AirPort)", "en6: Broadcom NetXtreme Gigabit Ethernet Controller"]
+end
 ````

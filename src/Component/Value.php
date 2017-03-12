@@ -96,12 +96,12 @@ class Value implements BaseInterface
             }
 
             return '[' . implode(', ', $values) . ']';
-        } elseif (is_bool($this->value)) {
-            return ($this->value ? 'true' : 'false');
-        } elseif (is_numeric($this->value)) {
-            return $this->value;
+        } elseif (is_bool($value)) {
+            return ($value ? 'true' : 'false');
+        } elseif (is_numeric($value)) {
+            return $value;
         } else {
-            return '"'.addcslashes($this->value, '"').'"';
+            return '"'.addcslashes($value, '"').'"';
         }
     }
 }
