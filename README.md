@@ -14,6 +14,7 @@ include 'vendor/autoload.php';
 use Smalot\Vagrant\Generator\Machine\Network\ForwardedPort;
 use Smalot\Vagrant\Generator\Machine\Network\PrivateNetwork;
 use Smalot\Vagrant\Generator\Machine\Network\PublicNetwork;
+use Smalot\Vagrant\Generator\Provision\Ansible;
 use Smalot\Vagrant\Generator\Vagrantfile;
 
 $vagrantfile = new Vagrantfile();
@@ -38,7 +39,13 @@ $publicNetwork->addBridge('en1: Wi-Fi (AirPort)');
 $publicNetwork->addBridge('en6: Broadcom NetXtreme Gigabit Ethernet Controller');
 $vagrantfile->getMachine()->getNetwork()->addPublicNetwork($publicNetwork);
 
+$ansible = new Ansible();
+$ansible->setPlaybook('playbook.yml');
+$ansible->setVerbose('v');
+$vagrantfile->getMachine()->getProvisions()->add($ansible);
+
 echo $vagrantfile->dump();
+
 
 ````
 
@@ -67,6 +74,13 @@ Vagrant.configure("2") do |config|
     # Create a public network, which generally matched to bridged network. Bridged
     # networks make the machine appear as another physical device on your network.
     config.vm.network "public_network", bridge: ["en1: Wi-Fi (AirPort)", "en6: Broadcom NetXtreme Gigabit Ethernet Controller"]
+
+    # View the documentation for the provider you are using for more information
+    # on available options.
+    config.vm.provision "ansible" do |ansible|
+        ansible.verbose = "v"
+        ansible.playbook = "playbook.yml"
+    end
 
     config.ssh.username = "ubuntu"
     config.ssh.password = "password"

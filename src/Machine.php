@@ -424,7 +424,7 @@ class Machine implements BaseInterface
     /**
      * @return Provision
      */
-    public function getProvision()
+    public function getProvisions()
     {
         return $this->provision;
     }
