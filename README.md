@@ -17,24 +17,26 @@ use Smalot\Vagrant\Generator\Machine\Network\PublicNetwork;
 use Smalot\Vagrant\Generator\Vagrantfile;
 
 $vagrantfile = new Vagrantfile();
-$vagrantfile->setBox('bento/ubuntu-16.04');
-$vagrantfile->setBoxCheckUpdate(false);
 
-$forwardedPort = new ForwardedPort(['guest' => 80, 'host' => 8081]);
-$vagrantfile->addChildren($forwardedPort);
+$vagrantfile->getMachine()->setBox('bento/ubuntu-16.04');
+$vagrantfile->getMachine()->setBoxCheckUpdate(false);
 
-$privateNetwork = new PrivateNetwork(['dhcp' => true]);
-$vagrantfile->addNetworkEntry($privateNetwork);
+$vagrantfile->getSsh()->setUsername('ubuntu');
+$vagrantfile->getSsh()->setPassword('password');
 
-$publicNetwork = new PublicNetwork(
-  [
-    'bridge' => [
-      'en1: Wi-Fi (AirPort)',
-      'en6: Broadcom NetXtreme Gigabit Ethernet Controller',
-    ],
-  ]
-);
-$vagrantfile->addNetworkEntry($publicNetwork);
+$forwardedPort = new ForwardedPort();
+$forwardedPort->setGuest(80);
+$forwardedPort->setHost(8081);
+$vagrantfile->getMachine()->getNetwork()->addForwardedPort($forwardedPort);
+
+$privateNetwork = new PrivateNetwork();
+$privateNetwork->setDhcp(true);
+$vagrantfile->getMachine()->getNetwork()->addPrivateNetwork($privateNetwork);
+
+$publicNetwork = new PublicNetwork();
+$publicNetwork->addBridge('en1: Wi-Fi (AirPort)');
+$publicNetwork->addBridge('en6: Broadcom NetXtreme Gigabit Ethernet Controller');
+$vagrantfile->getMachine()->getNetwork()->addPublicNetwork($publicNetwork);
 
 echo $vagrantfile->dump();
 
@@ -51,14 +53,7 @@ Vagrant.configure("2") do |config|
     # For a complete reference, please see the online documentation at
     # https://docs.vagrantup.com.
 
-
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://atlas.hashicorp.com/search.
     config.vm.box = "bento/ubuntu-16.04"
-
-    # Disable automatic box update checking. If you disable this, then boxes will
-    # only be checked for updates when the user runs `vagrant box outdated`. This
-    # is not recommended.
     config.vm.box_check_update = false
 
     # Create a forwarded port mapping which allows access to a specific port
@@ -72,5 +67,9 @@ Vagrant.configure("2") do |config|
     # Create a public network, which generally matched to bridged network. Bridged
     # networks make the machine appear as another physical device on your network.
     config.vm.network "public_network", bridge: ["en1: Wi-Fi (AirPort)", "en6: Broadcom NetXtreme Gigabit Ethernet Controller"]
+
+    config.ssh.username = "ubuntu"
+    config.ssh.password = "password"
+
 end
 ````

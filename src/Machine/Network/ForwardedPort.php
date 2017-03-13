@@ -17,11 +17,10 @@ class ForwardedPort extends ValueOption implements NetworkInterface
 
     /**
      * ForwardedPort constructor.
-     * @param array $options
      */
-    public function __construct($options)
+    public function __construct()
     {
-        $options += [
+        $options = [
           'auto_correct' => null,
           'guest' => null,
           'guest_ip' => null,

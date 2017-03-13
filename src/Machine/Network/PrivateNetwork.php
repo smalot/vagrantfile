@@ -13,11 +13,10 @@ class PrivateNetwork extends ValueOption implements NetworkInterface
 {
     /**
      * PrivateNetwork constructor.
-     * @param array $options
      */
-    public function __construct($options)
+    public function __construct()
     {
-        $options += [
+        $options = [
           'dhcp' => null,
           'ip' => null,
           'netmask' => null,

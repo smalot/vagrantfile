@@ -13,11 +13,10 @@ class PublicNetwork extends ValueOption implements NetworkInterface
 {
     /**
      * PublicNetwork constructor.
-     * @param array $options
      */
-    public function __construct($options)
+    public function __construct()
     {
-        $options += [
+        $options = [
           'dhcp' => null,
           'ip' => null,
           'bridge' => null,
@@ -80,6 +79,24 @@ class PublicNetwork extends ValueOption implements NetworkInterface
     public function setBridge($bridge)
     {
         $this->options['bridge'] = $bridge;
+
+        return $this;
+    }
+
+    /**
+     * @param string $bridge
+     * @return PublicNetwork
+     */
+    public function addBridge($bridge)
+    {
+        if (is_string($this->options['bridge'])) {
+            $this->options['bridge'] = [$this->options['bridge']];
+        }
+        elseif (!is_array($this->options['bridge'])) {
+            $this->options['bridge'] = [];
+        }
+
+        $this->options['bridge'][] = $bridge;
 
         return $this;
     }
